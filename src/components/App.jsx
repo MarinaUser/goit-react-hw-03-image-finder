@@ -72,10 +72,7 @@ export class App extends Component {
     return (
       <Container>
         <Searchbar onSubmit={handleSearchbarSubmit} />
-        
-            
-            <ImageGallery images={items} />
-                  
+            <ImageGallery images={items} />  
       </Container>
     );
   }
