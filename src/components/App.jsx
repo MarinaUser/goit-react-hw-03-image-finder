@@ -66,7 +66,7 @@ export class App extends Component {
   
 
   render() {
-    const { items, isLoading, error } = this.state;
+    const { items } = this.state;
     const { handleSearchbarSubmit } = this;
 
     return (
