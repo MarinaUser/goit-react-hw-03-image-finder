@@ -1,10 +1,14 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
 import * as API from './services/api';
-import { toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
+import { Container } from './App.styled';
+
 
 import Searchbar from './Searchbar';
-import { Container } from './App.styled';
 import ImageGallery from './ImageGallery';
+import Loader from './Loader';
+import Notification from './Notification';
+import Button from './Button';
 
 
 export class App extends Component {
@@ -13,13 +17,13 @@ export class App extends Component {
     query: '',
     items: [],
     isLoading: false,
+    error: null,
   };
 
   componentDidUpdate(_, prevState) {
     const { query, page } = this.state;
 
     if (prevState.query !== query || prevState.page !== page) {
-   
       this.fetchImages(query, page);
     }
   }
@@ -63,16 +67,38 @@ export class App extends Component {
     }
   };
 
+  loadMore = () => {
+    this.setState(prevState => ({
+      page: prevState.page + 1,
+    }));
+  };
+
   
 
   render() {
-    const { items } = this.state;
-    const { handleSearchbarSubmit } = this;
+    const { items, error, isLoading } = this.state;
+    const { handleSearchbarSubmit, loadMore } = this;
 
     return (
-      <Container>
+     <Container>
         <Searchbar onSubmit={handleSearchbarSubmit} />
-            <ImageGallery images={items} />  
+
+        {error ? (
+          <Notification message={error} />) : (
+          <>
+            {isLoading && <Loader />}
+            {items.length > 0 && !isLoading && (
+              <>
+                <ImageGallery images={items}  />
+                <Button onClick={loadMore} />
+              </>
+              )}
+              
+            <ToastContainer
+              position="top-right"
+              autoClose={3000}/>
+          </>
+        )}
       </Container>
     );
   }
