@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ImageGalleryItem from './ImageGalleryItem';
 import { GalleryList } from './ImageGallery.styled';
 
-const ImageGallery = ({ images }) => {
+const ImageGallery = ({ images, toggleModal }) => {
   return (
     <GalleryList>
       {images.map(({ id, webformatURL, tags, largeImageURL }) => (
@@ -11,7 +11,7 @@ const ImageGallery = ({ images }) => {
           key={id}
           src={webformatURL}
           alt={tags}
-          
+          toggleModal={() => toggleModal(tags, largeImageURL)}
         />
       ))}
     </GalleryList>
@@ -25,5 +25,6 @@ ImageGallery.propTypes = {
     PropTypes.shape({
       id: PropTypes.number.isRequired,
     })
-  ).isRequired
+  ).isRequired,
+  toggleModal: PropTypes.func.isRequired,
 };

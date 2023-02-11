@@ -9,6 +9,7 @@ import ImageGallery from './ImageGallery';
 import Loader from './Loader';
 import Notification from './Notification';
 import Button from './Button';
+import Modal from './Modal';
 
 
 export class App extends Component {
@@ -18,7 +19,11 @@ export class App extends Component {
     items: [],
     isLoading: false,
     error: null,
+    showModal: false,
+    largeImageURL: null,
+    tags: null,
   };
+
 
   componentDidUpdate(_, prevState) {
     const { query, page } = this.state;
@@ -73,11 +78,28 @@ export class App extends Component {
     }));
   };
 
+
+  toggleModal = (tags, largeImageURL) => {
+    const { showModal } = this.state;
+
+    showModal
+      ? this.setState(({ showModal }) => ({
+          showModal: !showModal,
+          tags: null,
+          largeImageURL: null,
+        }))
+      : this.setState(({ showModal }) => ({
+          showModal: !showModal,
+          tags,
+          largeImageURL,
+        }));
+  };
+
   
 
   render() {
-    const { items, error, isLoading } = this.state;
-    const { handleSearchbarSubmit, loadMore } = this;
+    const { items, error, isLoading, showModal, largeImageURL, tags } = this.state;
+    const { handleSearchbarSubmit, loadMore, toggleModal } = this;
 
     return (
      <Container>
@@ -89,10 +111,14 @@ export class App extends Component {
             {isLoading && <Loader />}
             {items.length > 0 && !isLoading && (
               <>
-                <ImageGallery images={items}  />
+                <ImageGallery images={items} toggleModal={toggleModal}  />
                 <Button onClick={loadMore} />
               </>
               )}
+
+              {showModal && (
+              <Modal url={largeImageURL} alt={tags} onClose={toggleModal} />
+            )}
               
             <ToastContainer
               position="top-right"
