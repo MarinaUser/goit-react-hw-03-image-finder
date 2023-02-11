@@ -22,6 +22,8 @@ export class App extends Component {
     showModal: false,
     largeImageURL: null,
     tags: null,
+    showBtn: false,
+    
   };
 
 
@@ -38,15 +40,13 @@ export class App extends Component {
       this.setState({ isLoading: true });
       const response = await API.fetchImages(query.toLowerCase(), page);
 
-      if (page === 1) {
-        this.setState(prevState => ({
-          items: [...response],
-        }));
-      } else {
+    
         this.setState(prevState => ({
           items: [...prevState.items, ...response],
+          showBtn: this.state.page < Math.ceil(response.totalHits / 12),
         }));
-      }
+      
+      
 
       if (response.length === 0) {
         return toast.warn(
@@ -98,7 +98,7 @@ export class App extends Component {
   
 
   render() {
-    const { items, error, isLoading, showModal, largeImageURL, tags } = this.state;
+    const { items, error, isLoading, showModal, largeImageURL, tags, showBtn } = this.state;
     const { handleSearchbarSubmit, loadMore, toggleModal } = this;
 
     return (
@@ -111,11 +111,13 @@ export class App extends Component {
             {isLoading && <Loader />}
             {items.length > 0 && !isLoading && (
               <>
-                <ImageGallery images={items} toggleModal={toggleModal}  />
-                <Button onClick={loadMore} />
+                <ImageGallery images={items} toggleModal={toggleModal} />
               </>
               )}
-
+              {showBtn && (
+                  <Button onClick={loadMore} />
+              )}
+                
               {showModal && (
               <Modal url={largeImageURL} alt={tags} onClose={toggleModal} />
             )}
