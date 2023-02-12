@@ -42,7 +42,7 @@ export class App extends Component {
 
     
         this.setState(prevState => ({
-          items: [...prevState.items, ...response],
+          items: [...prevState.items, ...response.hits],
           showBtn: this.state.page < Math.ceil(response.totalHits / 12),
         }));
       
